@@ -1,0 +1,40 @@
+# Dosya Adı: job.yml
+$schema: https://azuremlschemas.azureedge.net/latest/commandJob.schema.json
+
+display_name: Finetune-Decoder-UNI
+experiment_name: Finetune-Decoder-UNI
+description: Tek bir H5 klasöründeki özellikleri ve yerel CSV manifestosunu kullanarak modeli eğitir.
+
+code: .
+
+compute: azureml:gpu-cluster1 
+
+environment: azureml:custom-decoder-env:1
+
+
+inputs:
+  h5_features:
+    type: uri_folder
+    path:  "..."
+  
+  manifest_csv_file:
+    type: uri_file
+    path: ./finetune_data.csv
+
+  test_list_file:
+    type: uri_file
+    path: ./test.txt
+
+outputs:
+  model_output:
+    type: uri_folder
+    mode: rw_mount
+
+command: >-
+  python run_finetuning.py
+  --h5_features_dirs ${{inputs.h5_features}}
+  --manifest_csv ${{inputs.manifest_csv_file}}
+  --test_list_path ${{inputs.test_list_file}}
+  --output_dir ${{outputs.model_output}}
+  --epochs 130
+  --batch_size 128

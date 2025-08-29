@@ -1,0 +1,6 @@
+$schema: https://azuremlschemas.azureedge.net/latest/environment.schema.json
+name: custom-decoder-env
+version: 1
+build:
+  path: .
+  dockerfile_path: Dockerfile
